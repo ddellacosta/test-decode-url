@@ -1,4 +1,9 @@
-# DECODE_URL default setting in immutant conflicts with compojure's URL decoding behavior.
+# DECODE_URL default setting in immutant conflicts with ring's URL decoding behavior.
+
+Originally I had this described as conflicting with compojure's decoding behavior because that's how I originally caught this--but in the case exposed by what ring.middleware.resource is doing:
+https://github.com/ring-clojure/ring/blob/43e468f57ad8c7b747f664f1ed6a09f3c2c4760e/ring-core/src/ring/middleware/resource.clj#L14
+
+That said, this *also* breaks when used in conjunction with Compojure.
 
 To see this in action, in REPL:
 
@@ -51,8 +56,6 @@ java.lang.NumberFormatException: For input string: "fo"
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) ~[na:1.8.0_45]
 	at java.lang.Thread.run(Thread.java:745) ~[na:1.8.0_45]
 ```
-
-If you dig into the compojure code you can tell that it's trying to decode a string that is already decoded.
 
 To fix, comment the current line starting the server, and uncomment the line that includes a builder configuration in the options:
 
